@@ -1,0 +1,16 @@
+env: local
+
+http:
+  port: 3000
+
+base_domain: http://localhost
+
+db:
+  name: egw_db
+  schema: pgw
+  host: localhost
+  port: 5432
+  user: egw_db_user
+  pass: egw_db_pass
+
+version: 0.0.1

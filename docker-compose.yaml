@@ -1,0 +1,31 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:10
+    restart: "always"
+    volumes:
+      - pg_datadir:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: egw_db
+      POSTGRES_USER: egw_db_user
+      POSTGRES_PASSWORD: egw_db_pass
+  postgres-test:
+    image: postgres:10
+    restart: "always"
+    tmpfs:
+      - /var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: egw_db_test
+      POSTGRES_USER: egw_db_user
+      POSTGRES_PASSWORD: egw_db_pass_test
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
+volumes:
+  pg_datadir: {}
