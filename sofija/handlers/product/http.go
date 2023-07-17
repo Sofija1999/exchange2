@@ -28,8 +28,8 @@ func NewEgwProductHandler(productSvc ports.EgwProductUsecase, wsCont *restful.Co
 	ws.Path("/product").Consumes(restful.MIME_JSON).Produces(restful.MIME_JSON)
 
 	ws.Route(ws.POST("/insert").To(httpHandler.InsertProduct))
-	ws.Route(ws.PUT("/update/id").To(httpHandler.UpdateProduct))
-	ws.Route(ws.DELETE("/delete/id").To(httpHandler.DeleteProduct))
+	ws.Route(ws.PUT("/update/{id}").To(httpHandler.UpdateProduct))
+	ws.Route(ws.DELETE("/delete/{id}").To(httpHandler.DeleteProduct))
 	ws.Route(ws.GET("/get-all").To(httpHandler.GetAllProducts))
 
 	wsCont.Add(ws)

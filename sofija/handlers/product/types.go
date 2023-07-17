@@ -4,7 +4,7 @@ type InsertRequestData struct {
 	Name             string `json:"name"`
 	ShortDescription string `json:"short_description"`
 	Description      string `json:"description"`
-	Price            int64 `json:"price"`
+	Price            int64  `json:"price"`
 }
 
 type InsertResponseData struct {
@@ -12,9 +12,9 @@ type InsertResponseData struct {
 }
 
 type UpdateRequestData struct {
-	ShortDescription string
-	Description      string
-	Price            int64
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	Price            int64  `json:"price"`
 }
 
 type UpdateResponseData struct {
