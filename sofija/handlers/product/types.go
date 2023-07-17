@@ -1,10 +1,10 @@
 package product
 
 type InsertRequestData struct {
-	Name             string
-	ShortDescription string
-	Description      string
-	Price            int64
+	Name             string `json:"name"`
+	ShortDescription string `json:"short_description"`
+	Description      string `json:"description"`
+	Price            int64 `json:"price"`
 }
 
 type InsertResponseData struct {
