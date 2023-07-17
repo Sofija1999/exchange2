@@ -86,7 +86,7 @@ func (e *EgwProductHttpHandler) UpdateProduct(req *restful.Request, resp *restfu
 	}
 
 	ctx := req.Request.Context()
-	dataProduct := &domain.EgwProduct{ID: productID, ShortDescription: a.ShortDescription, Description: a.Description, Price: a.Price}
+	dataProduct := &domain.EgwProduct{ID: productID, Name: a.Name, ShortDescription: a.ShortDescription, Description: a.Description, Price: a.Price}
 
 	err := e.productSvc.Update(ctx, dataProduct)
 	if err != nil {

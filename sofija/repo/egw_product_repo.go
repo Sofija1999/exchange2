@@ -45,12 +45,13 @@ func (repo *EgwProductRepository) Update(ctx context.Context, EgwProduct *domain
 	// update, and reflect changes in the struct
 	err := repo.db.QueryRow(ctx,
 		`UPDATE egw.product SET
-			short_description = $1,
-			description = $2,
-			price = $3
-		 WHERE id = $4
+			name = $1,
+			short_description = $2,
+			description = $3,
+			price = $4
+		 WHERE id = $5
 		 RETURNING id,name, short_description, description, price`,
-		EgwProduct.ShortDescription, EgwProduct.Description, EgwProduct.Price, EgwProduct.ID).StructScan(EgwProduct)
+		EgwProduct.Name, EgwProduct.ShortDescription, EgwProduct.Description, EgwProduct.Price, EgwProduct.ID).StructScan(EgwProduct)
 	if err != nil {
 		return err
 	}

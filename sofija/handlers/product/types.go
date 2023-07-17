@@ -12,6 +12,7 @@ type InsertResponseData struct {
 }
 
 type UpdateRequestData struct {
+	Name             string `json:"name"`
 	ShortDescription string `json:"short_description"`
 	Description      string `json:"description"`
 	Price            int64  `json:"price"`
