@@ -165,6 +165,56 @@ func (suite *HttpSuite) TestDeleteProduct() {
 	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "DELETE", endpoint, nil, &realJWTToken)
 
 	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code, "Greška pri brisanju proizvoda")
+}
 
-	
+func (suite *HttpSuite) TestDeleteProductInvalidID() {
+	// Prepare data for the product
+	postData := InsertRequestData{
+		Name:             "borovnica",
+		ShortDescription: "sitna borovnica",
+		Description:      "sitna tamna borovnica iz sume",
+		Price:            400,
+	}
+
+	// Make a request to insert the product
+	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+
+	// Validate response
+	assert.Equal(suite.T(), http.StatusOK, responseRec.Code, "Error insert product")
+
+	// Extract the product ID from the response
+	var returnedProduct InsertResponseData
+	err := json.Unmarshal(responseRec.Body.Bytes(), &returnedProduct)
+	if err != nil {
+		suite.T().Fatalf("Error unmarshalling product data to json: %s", err)
+	}
+
+	// Generate a valid JWT token
+	realJWTToken, err := auth.CreateJWT("ana@gmail.com", "b221ca38-7b76-45cd-9c64-1d3c5a88220e")
+	if err != nil {
+		suite.T().Fatalf("Error creating JWT token: %s", err)
+	}
+
+	// Try to delete the product with an invalid ID and the valid JWT token
+	invalidID := "invalid-id-format"
+	deleteURL := fmt.Sprintf("/product/delete/%s", invalidID)
+	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "DELETE", deleteURL, nil, &realJWTToken)
+
+	// Validate response for unsuccessful delete
+	assert.Equal(suite.T(), http.StatusBadRequest, responseRec2.Code, "Product deletion should fail with invalid ID format")
+}
+
+func (suite *HttpSuite) TestFailedInsertProductNoName() {
+	// Prepare data for the product with no name
+	postData := InsertRequestData{
+		ShortDescription: "sitna borovnica",
+		Description:      "sitna tamna borovnica iz sume",
+		Price:            400,
+	}
+
+	// Make a request to insert the product
+	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+
+	// Validate response
+	assert.Equal(suite.T(), http.StatusBadRequest, responseRec.Code, "Product insertion should fail with no name")
 }

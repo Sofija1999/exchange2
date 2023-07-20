@@ -63,6 +63,7 @@ func (repo *EgwProductRepository) Update(ctx context.Context, EgwProduct *domain
 func (repo *EgwProductRepository) Delete(ctx context.Context, productID string) error {
 	_, err := repo.db.Exec(ctx, "DELETE FROM egw.product WHERE id = $1", productID)
 	if err != nil {
+		fmt.Println("ovde je isto greska")
 		return err
 	}
 

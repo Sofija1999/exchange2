@@ -12,6 +12,7 @@ import (
 	"github.com/Bloxico/exchange-gateway/sofija/core/domain"
 	"github.com/Bloxico/exchange-gateway/sofija/core/ports"
 	"github.com/emicklei/go-restful/v3"
+	"github.com/google/uuid"
 	//"log"
 )
 
@@ -49,6 +50,11 @@ func (e *EgwProductHttpHandler) InsertProduct(req *restful.Request, resp *restfu
 	egwProduct.ShortDescription = reqData.ShortDescription
 	egwProduct.Description = reqData.Description
 	egwProduct.Price = reqData.Price
+
+	if egwProduct.Name == "" {
+		resp.WriteError(http.StatusBadRequest, errors.New("name field is required"))
+		return
+	}
 
 	err := e.insertProduct(req.Request.Context(), egwProduct)
 	if err != nil {
@@ -111,9 +117,15 @@ func (e *EgwProductHttpHandler) DeleteProduct(req *restful.Request, resp *restfu
 		return
 	}
 
+	_, err := uuid.Parse(reqID)
+	if err != nil {
+		resp.WriteError(http.StatusBadRequest, errors.New("invalid ID format"))
+		return
+	}
+
 	ctx := req.Request.Context()
 
-	err := e.productSvc.Delete(ctx, reqID)
+	err = e.productSvc.Delete(ctx, reqID)
 	if err != nil {
 		resp.WriteError(http.StatusInternalServerError, errors.New("error deleting product"))
 		return
