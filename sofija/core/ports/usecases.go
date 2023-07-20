@@ -20,4 +20,5 @@ type EgwProductUsecase interface {
 	Delete(ctx context.Context, id string) error
 	FindByName(ctx context.Context, name string) (*domain.EgwProduct, error)
 	GetAll(ctx context.Context) ([]*domain.EgwProduct, error)
+	GetProduct(ctx context.Context, id string) (*domain.EgwProduct, error)
 }

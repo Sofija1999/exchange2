@@ -72,3 +72,17 @@ func (s *EgwProductService) GetAll(ctx context.Context) ([]*domain.EgwProduct, e
 	}
 	return products, nil
 }
+
+func (s *EgwProductService) GetProduct(ctx context.Context, id string) (*domain.EgwProduct, error) {
+	product, err := s.productRepo.FindByID(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve product with ID %s: %w", id, err)
+	}
+
+	// Check if the product is nil, which indicates that the product with the given ID was not found
+	if product == nil {
+		return nil, nil
+	}
+
+	return product, nil
+}

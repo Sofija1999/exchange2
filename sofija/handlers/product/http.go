@@ -28,10 +28,11 @@ func NewEgwProductHandler(productSvc ports.EgwProductUsecase, wsCont *restful.Co
 
 	ws.Path("/product").Consumes(restful.MIME_JSON).Produces(restful.MIME_JSON)
 
-	ws.Route(ws.POST("/insert").To(httpHandler.InsertProduct).Filter(auth.AuthJWT))
+	ws.Route(ws.POST("/insert").To(httpHandler.InsertProduct))
 	ws.Route(ws.PUT("/update/{id}").To(httpHandler.UpdateProduct).Filter(auth.AuthJWT))
 	ws.Route(ws.DELETE("/delete/{id}").To(httpHandler.DeleteProduct).Filter(auth.AuthJWT))
 	ws.Route(ws.GET("/get-all").To(httpHandler.GetAllProducts).Filter(auth.AuthJWT))
+	ws.Route(ws.GET("/get/{id}").To(httpHandler.GetProduct))
 
 	wsCont.Add(ws)
 
@@ -138,4 +139,24 @@ func (e *EgwProductHttpHandler) GetAllProducts(req *restful.Request, resp *restf
 	}
 
 	resp.WriteAsJson(productModels)
+}
+
+func (e *EgwProductHttpHandler) GetProduct(req *restful.Request, resp *restful.Response) {
+	ctx := req.Request.Context()
+
+	productID := req.PathParameter("id")
+	if len(productID) == 0 {
+		resp.WriteError(http.StatusBadRequest, errors.New("no id found for product"))
+		return
+	}
+
+	product, err := e.productSvc.GetProduct(ctx, productID)
+	if err != nil {
+		return
+	}
+
+	productModel := EgwProductModel{}
+	productModel.FromDomain(product)
+
+	resp.WriteAsJson(productModel)
 }

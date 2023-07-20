@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/pkg/errors"
 
@@ -124,4 +125,21 @@ func (repo *EgwProductRepository) GetAll(ctx context.Context) ([]*domain.EgwProd
 	}
 
 	return products, nil
+}
+
+func (repo *EgwProductRepository) GetProduct(ctx context.Context, id string) (*domain.EgwProduct, error) {
+	// Query the database to get the product with the specified ID
+	row := repo.db.QueryRow(ctx, "SELECT id, name, short_description, description, price FROM egw.product WHERE id = $1", id)
+
+	var product domain.EgwProduct
+	err := row.Scan(&product.ID, &product.Name, &product.ShortDescription, &product.Description, &product.Price)
+	if err == sql.ErrNoRows {
+		// Return a custom error indicating that the product was not found
+		return nil, fmt.Errorf("product not found")
+	} else if err != nil {
+		// Return any other error that occurred during the query
+		return nil, err
+	}
+
+	return &product, nil
 }
