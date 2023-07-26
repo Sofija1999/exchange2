@@ -40,3 +40,11 @@ func (s *EgwOrderService) FindByID(ctx context.Context, id string) (*domain.EgwO
 
 	return order, nil
 }
+
+func (s *EgwOrderService) Delete(ctx context.Context, id string) error {
+	err := s.orderRepo.Delete(ctx, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

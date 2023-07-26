@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/Bloxico/exchange-gateway/sofija/core/domain"
 
@@ -89,4 +90,19 @@ func (repo *EgwOrderRepository) FindByID(ctx context.Context, id string) (*domai
 	}
 
 	return &egwOrder, nil
+}
+
+func (repo *EgwOrderRepository) Delete(ctx context.Context, orderID string) error {
+	_, err := repo.db.Exec(ctx, "DELETE FROM egw.order_item WHERE order_id = $1", orderID)
+	if err != nil {
+		fmt.Println("Error while delete order items from database:", err)
+		return err
+	}
+	_, err = repo.db.Exec(ctx, "DELETE FROM egw.order WHERE id = $1", orderID)
+	if err != nil {
+		fmt.Println("Error while delete order from database", err)
+		return err
+	}
+
+	return nil
 }

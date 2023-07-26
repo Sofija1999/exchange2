@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/emicklei/go-restful/v3"
+	"github.com/google/uuid"
 )
 
 type EgwOrderHttpHandler struct {
@@ -25,6 +26,7 @@ func NewEgwOrderHandler(orderSvc ports.EgwOrderUsecase, wsCont *restful.Containe
 	ws.Path("/order").Consumes(restful.MIME_JSON).Produces(restful.MIME_JSON)
 
 	ws.Route(ws.POST("/insert").To(httpHandler.InsertOrder))
+	ws.Route(ws.DELETE("/delete/{id}").To(httpHandler.DeleteOrder))
 
 	wsCont.Add(ws)
 
@@ -102,4 +104,30 @@ func (e *EgwOrderHttpHandler) insertOrder(ctx context.Context, egwOrder *EgwOrde
 	egwOrder.FromDomain(insertedOrder)
 
 	return nil
+}
+
+func (e *EgwOrderHttpHandler) DeleteOrder(req *restful.Request, resp *restful.Response) {
+	// get order ID for delete query
+	reqID := req.PathParameter("id")
+	fmt.Println(reqID)
+	if len(reqID) == 0 {
+		resp.WriteError(http.StatusBadRequest, errors.New("no ID provided for order deletion"))
+		return
+	}
+
+	_, err := uuid.Parse(reqID)
+	if err != nil {
+		resp.WriteError(http.StatusBadRequest, errors.New("invalid ID format"))
+		return
+	}
+
+	ctx := req.Request.Context()
+
+	err = e.orderSvc.Delete(ctx, reqID)
+	if err != nil {
+		resp.WriteError(http.StatusInternalServerError, errors.New("error deleting order"))
+		return
+	}
+
+	resp.WriteHeader(http.StatusOK)
 }

@@ -26,4 +26,5 @@ type EgwProductUsecase interface {
 type EgwOrderUsecase interface {
 	InsertOrder(ctx context.Context, order *domain.EgwOrder) (string, error)
 	FindByID(ctx context.Context, id string) (*domain.EgwOrder, error)
+	Delete(ctx context.Context, id string) error
 }
