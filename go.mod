@@ -6,7 +6,7 @@ require (
 	github.com/Bloxico/exchange-gateway v0.0.0-00010101000000-000000000000
 	github.com/emicklei/go-restful/v3 v3.10.2
 	github.com/golang-jwt/jwt/v4 v4.5.0
-	github.com/google/uuid v1.1.2
+	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/julienschmidt/httprouter v1.3.0

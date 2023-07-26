@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"egw-be/sofija/handlers/order"
 	"fmt"
 	"net/http"
 	"time"
@@ -79,6 +80,12 @@ func NewServer(cfg config.ServerConfig, db *database.DB) *Server {
 	productSvc := usecases.NewEgwProductService(productRep)
 
 	product.NewEgwProductHandler(productSvc, wsCont)
+
+	//order routes
+	orderRep := repo.NewEgwOrderRepository(db)
+	orderSvc := usecases.NewEgwOrderService(orderRep)
+
+	order.NewEgwOrderHandler(orderSvc, wsCont)
 
 	http.Handle("/", wsCont)
 
