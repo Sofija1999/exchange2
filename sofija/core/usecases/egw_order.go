@@ -48,3 +48,11 @@ func (s *EgwOrderService) Delete(ctx context.Context, id string) error {
 	}
 	return nil
 }
+
+func (s *EgwOrderService) Update(ctx context.Context, egwOrder *domain.EgwOrder) error {
+	err := s.orderRepo.Update(ctx, egwOrder)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -106,3 +106,17 @@ func (repo *EgwOrderRepository) Delete(ctx context.Context, orderID string) erro
 
 	return nil
 }
+
+func (repo *EgwOrderRepository) Update(ctx context.Context, EgwOrder *domain.EgwOrder) error {
+
+	_, err := repo.db.Exec(ctx,
+		`UPDATE egw.order SET
+			status = $1,
+			updated_at = NOW()
+		 WHERE id = $2`,
+		EgwOrder.Status, EgwOrder.ID)
+	if err != nil {
+		return err
+	}
+	return nil
+}

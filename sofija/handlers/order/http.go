@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Bloxico/exchange-gateway/sofija/core/domain"
+
 	"github.com/emicklei/go-restful/v3"
 	"github.com/google/uuid"
 )
@@ -27,6 +29,7 @@ func NewEgwOrderHandler(orderSvc ports.EgwOrderUsecase, wsCont *restful.Containe
 
 	ws.Route(ws.POST("/insert").To(httpHandler.InsertOrder))
 	ws.Route(ws.DELETE("/delete/{id}").To(httpHandler.DeleteOrder))
+	ws.Route(ws.PUT("/update/{id}").To(httpHandler.UpdateOrder))
 
 	wsCont.Add(ws)
 
@@ -130,4 +133,34 @@ func (e *EgwOrderHttpHandler) DeleteOrder(req *restful.Request, resp *restful.Re
 	}
 
 	resp.WriteHeader(http.StatusOK)
+}
+
+func (e *EgwOrderHttpHandler) UpdateOrder(req *restful.Request, resp *restful.Response) {
+
+	var a UpdateRequestData
+	req.ReadEntity(&a)
+
+	orderID := req.PathParameter("id")
+	if len(orderID) == 0 {
+		resp.WriteError(http.StatusBadRequest, errors.New("no id found for order"))
+		return
+	}
+
+	ctx := req.Request.Context()
+	dataOrder := &domain.EgwOrder{ID: orderID, Status: a.Status}
+
+	err := e.orderSvc.Update(ctx, dataOrder)
+	if err != nil {
+		resp.WriteError(http.StatusInternalServerError, errors.New("error updating order"))
+		return
+	}
+
+	returnedOrder, err := e.orderSvc.FindByID(ctx, orderID)
+	if err != nil {
+		return
+	}
+
+	// return updated order as data
+	//var retOrder *EgwOrderModel = &EgwOrderModel{}
+	resp.WriteAsJson(returnedOrder)
 }
