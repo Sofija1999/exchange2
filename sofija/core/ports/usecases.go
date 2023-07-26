@@ -22,3 +22,8 @@ type EgwProductUsecase interface {
 	GetAll(ctx context.Context) ([]*domain.EgwProduct, error)
 	GetProduct(ctx context.Context, id string) (*domain.EgwProduct, error)
 }
+
+type EgwOrderUsecase interface {
+	InsertOrder(ctx context.Context, order *domain.EgwOrder) error
+	FindByID(ctx context.Context, id string) (*domain.EgwOrder, error)
+}

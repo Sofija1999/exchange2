@@ -22,3 +22,8 @@ type EgwProductRepo interface {
 	GetAll(ctx context.Context) ([]*domain.EgwProduct, error)
 	GetProduct(ctx context.Context, id string) (*domain.EgwProduct, error)
 }
+
+type EgwOrderRepo interface {
+	Insert(ctx context.Context, order *domain.EgwOrder) error
+	FindByID(ctx context.Context, id string) (*domain.EgwOrder, error)
+}
