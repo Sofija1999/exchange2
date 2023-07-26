@@ -4,22 +4,18 @@ import (
 	"time"
 
 	"github.com/Bloxico/exchange-gateway/sofija/core/domain"
-
-	"github.com/Bloxico/exchange-gateway/sofija/core/order"
-	"github.com/Bloxico/exchange-gateway/sofija/core/order_item"
 )
 
 type EgwOrderModel struct {
-	ID        string                          `json:"id"`
-	UserID    string                          `json:"user_id"`
-	Status    string                          `json:"status"`
-	CreatedAt time.Time                       `json:"created_at"`
-	UpdatedAt time.Time                       `json:"updated_at"`
-	Items     []*order_item.EgwItemOrderModel `json:"order_items"`
+	ID        string               `json:"id"`
+	UserID    string               `json:"user_id"`
+	Status    string               `json:"status"`
+	CreatedAt time.Time            `json:"created_at"`
+	UpdatedAt time.Time            `json:"updated_at"`
+	Items     []*EgwItemOrderModel `json:"order_items"`
 }
 
 func (e *EgwOrderModel) FromDomain(egwOrder *domain.EgwOrder) {
-	// sanity checks
 	if e == nil || egwOrder == nil {
 		return
 	}
@@ -30,10 +26,9 @@ func (e *EgwOrderModel) FromDomain(egwOrder *domain.EgwOrder) {
 	e.CreatedAt = egwOrder.CreatedAt
 	e.UpdatedAt = egwOrder.UpdatedAt
 
-	// Convert domain.EgwItemOrderModel to []*domain.EgwItemOrderModel
-	e.Items = make([]order_item.EgwItemOrderModel, len(egwOrder.OrderItems))
+	e.Items = make([]*EgwItemOrderModel, len(egwOrder.OrderItems))
 	for i, item := range egwOrder.OrderItems {
-		e.Items[i] = &order_item.EgwItemOrderModel{
+		e.Items[i] = &EgwItemOrderModel{
 			ProductID:   item.ProductID,
 			ProductName: item.ProductName,
 			Quantity:    item.Quantity,
@@ -46,9 +41,9 @@ func (e *EgwOrderModel) ToDomain() *domain.EgwOrder {
 		return &domain.EgwOrder{}
 	}
 
-	egwItemOrders := make([]*order.EgwItemOrder, len(e.Items))
+	egwItemOrders := make([]*domain.EgwOrderItem, len(e.Items))
 	for i, item := range e.Items {
-		egwItemOrders[i] = &order.EgwItemOrder{
+		egwItemOrders[i] = &domain.EgwOrderItem{
 			ProductID:   item.ProductID,
 			ProductName: item.ProductName,
 			Quantity:    item.Quantity,
@@ -62,5 +57,33 @@ func (e *EgwOrderModel) ToDomain() *domain.EgwOrder {
 		CreatedAt:  e.CreatedAt,
 		UpdatedAt:  e.UpdatedAt,
 		OrderItems: egwItemOrders,
+	}
+}
+
+type EgwItemOrderModel struct {
+	ProductID   string `json:"product_id"`
+	ProductName string `json:"product_name"`
+	Quantity    int    `json:"quantity"`
+}
+
+func (e *EgwItemOrderModel) FromDomain(item *domain.EgwOrderItem) {
+	if e == nil || item == nil {
+		return
+	}
+
+	e.ProductID = item.ProductID
+	e.ProductName = item.ProductName
+	e.Quantity = item.Quantity
+}
+
+func (e *EgwItemOrderModel) ToDomain() *domain.EgwOrderItem {
+	if e == nil {
+		return &domain.EgwOrderItem{}
+	}
+
+	return &domain.EgwOrderItem{
+		ProductID:   e.ProductID,
+		ProductName: e.ProductName,
+		Quantity:    e.Quantity,
 	}
 }
