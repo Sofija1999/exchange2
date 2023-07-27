@@ -93,6 +93,7 @@ func (e *EgwOrderHttpHandler) insertOrder(ctx context.Context, egwOrder *EgwOrde
 	// Insert the order into the database using the order service
 	insertedOrderID, err := e.orderSvc.InsertOrder(ctx, domainOrder)
 	if err != nil {
+		fmt.Println("greskica 3")
 		return err
 	}
 
@@ -100,6 +101,7 @@ func (e *EgwOrderHttpHandler) insertOrder(ctx context.Context, egwOrder *EgwOrde
 	fmt.Println(domainOrder.ID)
 	insertedOrder, err := e.orderSvc.FindByID(ctx, insertedOrderID)
 	if err != nil {
+		fmt.Println("greskica 4")
 		return err
 	}
 
@@ -161,6 +163,5 @@ func (e *EgwOrderHttpHandler) UpdateOrder(req *restful.Request, resp *restful.Re
 	}
 
 	// return updated order as data
-	//var retOrder *EgwOrderModel = &EgwOrderModel{}
 	resp.WriteAsJson(returnedOrder)
 }

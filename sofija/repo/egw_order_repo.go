@@ -30,11 +30,17 @@ func NewEgwOrderRepository(db *database.DB) *EgwOrderRepository {
 
 func (repo *EgwOrderRepository) Insert(ctx context.Context, egwOrder *domain.EgwOrder) (string, error) {
 	orderID := uuid.New().String()
+	fmt.Println(egwOrder.UserID)
+	fmt.Println(egwOrder.Status)
+	fmt.Println(egwOrder.CreatedAt)
+	fmt.Println(egwOrder.UpdatedAt)
 
 	_, err := repo.db.Exec(ctx,
 		"INSERT INTO egw.order (id, user_id, status, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)",
 		orderID, egwOrder.UserID, egwOrder.Status, egwOrder.CreatedAt, egwOrder.UpdatedAt)
 	if err != nil {
+		fmt.Println("greska u bazi 1")
+		fmt.Println(err)
 		return "", err
 	}
 
@@ -47,6 +53,7 @@ func (repo *EgwOrderRepository) Insert(ctx context.Context, egwOrder *domain.Egw
 			"INSERT INTO egw.order_item (id, order_id, product_id, product_name, quantity) VALUES ($1, $2, $3, $4, $5)",
 			itemID, orderID, item.ProductID, item.ProductName, item.Quantity)
 		if err != nil {
+			fmt.Println("greska u bazi 2")
 			return "", err
 		}
 	}

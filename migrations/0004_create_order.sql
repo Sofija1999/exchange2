@@ -1,4 +1,4 @@
-CREATE TABLE egw."order" (
+CREATE TABLE IF NOT EXISTS egw."order" (
 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
 	user_id uuid NOT NULL,
 	status varchar NULL DEFAULT 'CREATED',

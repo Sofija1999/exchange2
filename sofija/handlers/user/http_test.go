@@ -2,13 +2,13 @@ package user
 
 import (
 	"context"
+	"egw-be/sofija/core/usecases"
 	"encoding/json"
 	"net/http"
 	"testing"
 
 	"github.com/Bloxico/exchange-gateway/sofija/app"
 	"github.com/Bloxico/exchange-gateway/sofija/core/domain"
-	"github.com/Bloxico/exchange-gateway/sofija/core/usecases"
 	"github.com/Bloxico/exchange-gateway/sofija/repo"
 	"github.com/Bloxico/exchange-gateway/sofija/testutil"
 	"github.com/emicklei/go-restful/v3"
@@ -53,7 +53,7 @@ func TestUserTestSuite(t *testing.T) {
 func (suite *HttpSuite) TestRegisterUser() {
 	// prepare registration data
 	postData := RegisterRequestData{
-		Email:   "testy@email.com",
+		Email:   "testy2@email.com",
 		Name:    "First name",
 		Surname: "Last name",
 	}
@@ -77,7 +77,7 @@ func (suite *HttpSuite) TestRegisterUser() {
 
 func (suite *HttpSuite) TestLoginUser() {
 	// register the user before sending login request
-	userEmail := "testy@email.com"
+	userEmail := "testy1@email.com"
 	// register the user
 	userPass := "password123"
 	passHash, _ := bcrypt.GenerateFromPassword([]byte(userPass), 10)
@@ -105,7 +105,7 @@ func (suite *HttpSuite) TestLoginUser() {
 
 func (suite *HttpSuite) TestInvalidLogin() {
 	// register the user before sending login request
-	userEmail := "testy@email.com"
+	userEmail := "testy3@email.com"
 	// register the user
 	userPass := "password123"
 	passHash, _ := bcrypt.GenerateFromPassword([]byte(userPass), 10)
@@ -125,7 +125,7 @@ func (suite *HttpSuite) TestInvalidLogin() {
 func (suite *HttpSuite) TestUpdateUser() {
 	// prepare registration data
 	postData := RegisterRequestData{
-		Email:   "testy@email.com",
+		Email:   "testy4@email.com",
 		Name:    "First name",
 		Surname: "Last name",
 	}

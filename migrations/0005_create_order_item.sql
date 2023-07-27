@@ -1,4 +1,4 @@
-CREATE TABLE egw.order_item (
+CREATE TABLE IF NOT EXISTS egw.order_item (
 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
 	order_id uuid NOT NULL,
 	product_id uuid NOT NULL,
