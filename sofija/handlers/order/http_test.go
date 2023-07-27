@@ -147,11 +147,63 @@ func (suite *HttpSuite) TestInsertOrder() {
 
 	//make request
 	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/order/insert", postData, nil)
-	fmt.Println("greskica1")
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code)
-	var returnedOrder InsertRequestData
+	var returnedOrder InsertResponseData
+
+	fmt.Println(responseRec.Body.String())
+
+	err := json.Unmarshal(responseRec.Body.Bytes(), &returnedOrder)
+	if err != nil {
+		suite.T().Fatalf("Error unmarshalling order to json: %s", err)
+	}
+
+	//check if order is nil
+	assert.NotNil(suite.T(), returnedOrder)
+
+	//check userID and status of order
+	assert.Equal(suite.T(), returnedOrder.UserID, postData.UserID)
+	assert.Equal(suite.T(), returnedOrder.Status, postData.Status)
+
+	//check if order items is nil and len of items
+	assert.NotNil(suite.T(), returnedOrder.Items)
+	assert.Len(suite.T(), returnedOrder.Items, len(postData.Items))
+
+	//assertions for each order item in the returned order
+	for i, item := range returnedOrder.Items {
+		assert.Equal(suite.T(), item.ProductID, postData.Items[i].ProductID)
+		assert.Equal(suite.T(), item.ProductName, postData.Items[i].ProductName)
+		assert.Equal(suite.T(), item.Quantity, postData.Items[i].Quantity)
+	}
+}
+
+func (suite *HttpSuite) TestDeleteOrder() {
+
+	//data for insert order
+	postData := InsertRequestData{
+		UserID: "e23df3a8-4c06-4652-b432-0e2ee514575c",
+		Status: "CREATED",
+		Items: []*InsertOrderItemRequest{
+			{
+				ProductID:   "6e692fcc-202b-487d-b243-b52f0031b338",
+				ProductName: "jabuka",
+				Quantity:    10,
+			},
+			{
+				ProductID:   "f01b7274-f2cd-4970-b917-572af43600c0",
+				ProductName: "kupine",
+				Quantity:    30,
+			},
+		},
+	}
+
+	//make request
+	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/order/insert", postData, nil)
+
+	// validate response
+	assert.Equal(suite.T(), http.StatusOK, responseRec.Code)
+	var returnedOrder InsertResponseData
 
 	fmt.Println(responseRec.Body.String())
 
@@ -178,4 +230,10 @@ func (suite *HttpSuite) TestInsertOrder() {
 		assert.Equal(suite.T(), item.Quantity, postData.Items[i].Quantity)
 	}
 
+	id := returnedOrder.ID
+
+	endpoint := fmt.Sprintf("/order/delete/%s", id)
+	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "DELETE", endpoint, nil, nil)
+
+	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code, "Error while delete order")
 }
