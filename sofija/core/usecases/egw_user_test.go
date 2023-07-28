@@ -42,7 +42,7 @@ func TestUserTestSuite(t *testing.T) {
 
 func (suite *EgwUserSuite) TestUserRegistration() {
 
-	userEmail := "email1@provider.com"
+	userEmail := "email100@provider.com"
 	err := suite.userSvc.RegisterUser(context.TODO(), &domain.EgwUser{Email: userEmail})
 
 	if err != nil {
@@ -58,7 +58,7 @@ func (suite *EgwUserSuite) TestUserRegistration() {
 }
 
 func (suite *EgwUserSuite) TestCannotRegisterWithExistingEmail() {
-	userEmail := "email2@provider.com"
+	userEmail := "email200@provider.com"
 	err := suite.userSvc.RegisterUser(context.TODO(), &domain.EgwUser{Email: userEmail})
 
 	if err != nil {
