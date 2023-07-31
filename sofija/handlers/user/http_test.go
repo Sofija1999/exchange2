@@ -60,7 +60,7 @@ func (suite *HttpSuite) TestRegisterUser() {
 		Surname: "Last name",
 	}
 	// make request
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/register", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/register", postData, nil)
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code)
@@ -90,7 +90,7 @@ func (suite *HttpSuite) TestLoginUser() {
 
 	// prepare login data
 	postData := LoginRequestData{Email: userEmail, Password: userPass}
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/login", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/login", postData, nil)
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code)
@@ -118,7 +118,7 @@ func (suite *HttpSuite) TestInvalidLogin() {
 
 	// prepare login data
 	postData := LoginRequestData{Email: userEmail, Password: "invalid password 123"}
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/login", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/login", postData, nil)
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusForbidden, responseRec.Code)
@@ -132,7 +132,7 @@ func (suite *HttpSuite) TestUpdateUser() {
 		Surname: "Last name",
 	}
 	// make request
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/register", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/register", postData, nil)
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code, "Error registering")
@@ -150,7 +150,7 @@ func (suite *HttpSuite) TestUpdateUser() {
 		Name:    "New name",
 		Surname: "New surname",
 	}
-	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "PUT", "/user", updateData, &token)
+	responseRec2 := testutil.MakeRequest(suite.wsContainer, "PUT", "/user", updateData, &token)
 	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code)
 
 	var updatedUser EgwUserModel

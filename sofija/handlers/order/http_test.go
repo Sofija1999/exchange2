@@ -73,7 +73,7 @@ func (suite *HttpSuite) TestInsertOrder() {
 		Password: "testpassword",
 	}
 	// Make request to register user
-	responseUserRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/register", postUserData, nil)
+	responseUserRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/register", postUserData, nil)
 
 	fmt.Println(responseUserRec.Body.String())
 	// Validate user registration response
@@ -99,7 +99,7 @@ func (suite *HttpSuite) TestInsertOrder() {
 		Price:            400,
 	}
 	// Make request to insert product
-	responseProductRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postProductData, nil)
+	responseProductRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postProductData, nil)
 
 	// Validate product insertion response
 	assert.Equal(suite.T(), http.StatusOK, responseProductRec.Code)
@@ -130,7 +130,7 @@ func (suite *HttpSuite) TestInsertOrder() {
 		},
 	}
 	// Make request to insert order
-	responseOrderRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/order/insert", postOrderData, nil)
+	responseOrderRec := testutil.MakeRequest(suite.wsContainer, "POST", "/order/insert", postOrderData, nil)
 
 	// Validate order insertion response
 	assert.Equal(suite.T(), http.StatusOK, responseOrderRec.Code)
@@ -152,7 +152,7 @@ func (suite *HttpSuite) TestDeleteOrder() {
 		Password: "testpassword",
 	}
 	// Make request to register user
-	responseUserRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/register", postUserData, nil)
+	responseUserRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/register", postUserData, nil)
 
 	fmt.Println(responseUserRec.Body.String())
 	// Validate user registration response
@@ -178,7 +178,7 @@ func (suite *HttpSuite) TestDeleteOrder() {
 		Price:            330,
 	}
 	// Make request to insert product
-	responseProductRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postProductData, nil)
+	responseProductRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postProductData, nil)
 
 	// Validate product insertion response
 	assert.Equal(suite.T(), http.StatusOK, responseProductRec.Code)
@@ -209,7 +209,7 @@ func (suite *HttpSuite) TestDeleteOrder() {
 		},
 	}
 	// Make request to insert order
-	responseOrderRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/order/insert", postOrderData, nil)
+	responseOrderRec := testutil.MakeRequest(suite.wsContainer, "POST", "/order/insert", postOrderData, nil)
 
 	// Validate order insertion response
 	assert.Equal(suite.T(), http.StatusOK, responseOrderRec.Code)
@@ -223,7 +223,7 @@ func (suite *HttpSuite) TestDeleteOrder() {
 	id := returnedOrder.ID
 
 	endpoint := fmt.Sprintf("/order/delete/%s", id)
-	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "DELETE", endpoint, nil, nil)
+	responseRec2 := testutil.MakeRequest(suite.wsContainer, "DELETE", endpoint, nil, nil)
 
 	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code, "Error while delete order")
 }
@@ -237,7 +237,7 @@ func (suite *HttpSuite) TestUpdateOrder() {
 		Password: "testpassword",
 	}
 	// Make request to register user
-	responseUserRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/user/register", postUserData, nil)
+	responseUserRec := testutil.MakeRequest(suite.wsContainer, "POST", "/user/register", postUserData, nil)
 
 	fmt.Println(responseUserRec.Body.String())
 	// Validate user registration response
@@ -263,7 +263,7 @@ func (suite *HttpSuite) TestUpdateOrder() {
 		Price:            850,
 	}
 	// Make request to insert product
-	responseProductRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postProductData, nil)
+	responseProductRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postProductData, nil)
 
 	// Validate product insertion response
 	assert.Equal(suite.T(), http.StatusOK, responseProductRec.Code)
@@ -294,7 +294,7 @@ func (suite *HttpSuite) TestUpdateOrder() {
 		},
 	}
 	// Make request to insert order
-	responseOrderRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/order/insert", postOrderData, nil)
+	responseOrderRec := testutil.MakeRequest(suite.wsContainer, "POST", "/order/insert", postOrderData, nil)
 
 	// Validate order insertion response
 	assert.Equal(suite.T(), http.StatusOK, responseOrderRec.Code)
@@ -313,7 +313,7 @@ func (suite *HttpSuite) TestUpdateOrder() {
 	}
 
 	endpoint := fmt.Sprintf("/order/update/%s", id)
-	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "PUT", endpoint, updateData, nil)
+	responseRec2 := testutil.MakeRequest(suite.wsContainer, "PUT", endpoint, updateData, nil)
 
 	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code)
 

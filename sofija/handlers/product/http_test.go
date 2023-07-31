@@ -61,7 +61,7 @@ func (suite *HttpSuite) TestInsertProduct() {
 	}
 
 	// make request
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postData, nil)
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code)
@@ -90,7 +90,7 @@ func (suite *HttpSuite) TestUpdateProduct() {
 		Price:            400,
 	}
 	// make request
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postData, nil)
 
 	// validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code, "Error insert product")
@@ -119,7 +119,7 @@ func (suite *HttpSuite) TestUpdateProduct() {
 	}
 
 	endpoint := fmt.Sprintf("/product/update/%s", id)
-	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "PUT", endpoint, updateData, &realJWTToken)
+	responseRec2 := testutil.MakeRequest(suite.wsContainer, "PUT", endpoint, updateData, &realJWTToken)
 
 	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code)
 
@@ -145,7 +145,7 @@ func (suite *HttpSuite) TestDeleteProduct() {
 		Price:            400,
 	}
 
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postData, nil)
 
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code, "Error insert product")
 
@@ -163,7 +163,7 @@ func (suite *HttpSuite) TestDeleteProduct() {
 	}
 
 	endpoint := fmt.Sprintf("/product/delete/%s", id)
-	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "DELETE", endpoint, nil, &realJWTToken)
+	responseRec2 := testutil.MakeRequest(suite.wsContainer, "DELETE", endpoint, nil, &realJWTToken)
 
 	assert.Equal(suite.T(), http.StatusOK, responseRec2.Code, "Greška pri brisanju proizvoda")
 }
@@ -178,7 +178,7 @@ func (suite *HttpSuite) TestDeleteProductInvalidID() {
 	}
 
 	// Make a request to insert the product
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postData, nil)
 
 	// Validate response
 	assert.Equal(suite.T(), http.StatusOK, responseRec.Code, "Error insert product")
@@ -199,7 +199,7 @@ func (suite *HttpSuite) TestDeleteProductInvalidID() {
 	// Try to delete the product with an invalid ID and the valid JWT token
 	invalidID := "invalid-id-format"
 	deleteURL := fmt.Sprintf("/product/delete/%s", invalidID)
-	responseRec2 := testutil.MakeRequest(*suite.wsContainer, "DELETE", deleteURL, nil, &realJWTToken)
+	responseRec2 := testutil.MakeRequest(suite.wsContainer, "DELETE", deleteURL, nil, &realJWTToken)
 
 	// Validate response for unsuccessful delete
 	assert.Equal(suite.T(), http.StatusBadRequest, responseRec2.Code, "Product deletion should fail with invalid ID format")
@@ -214,7 +214,7 @@ func (suite *HttpSuite) TestFailedInsertProductNoName() {
 	}
 
 	// Make a request to insert the product
-	responseRec := testutil.MakeRequest(*suite.wsContainer, "POST", "/product/insert", postData, nil)
+	responseRec := testutil.MakeRequest(suite.wsContainer, "POST", "/product/insert", postData, nil)
 
 	// Validate response
 	assert.Equal(suite.T(), http.StatusBadRequest, responseRec.Code, "Product insertion should fail with no name")

@@ -34,7 +34,7 @@ func InitTestApp() *app.App {
 
 // Sends a HTTP request to the set path, using the set method
 // If postData is provided, it will be marshalled and sent
-func MakeRequest(container restful.Container, method string, path string, postData interface{}, jwtToken *string) *httptest.ResponseRecorder {
+func MakeRequest(container *restful.Container, method string, path string, postData interface{}, jwtToken *string) *httptest.ResponseRecorder {
 	jsdat, _ := json.Marshal(postData)
 	bodyReader := bytes.NewReader(jsdat)
 	httpRequest, _ := http.NewRequest(method, path, bodyReader)
