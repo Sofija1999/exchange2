@@ -29,6 +29,7 @@ func (suite *HttpSuite) SetupTest() {
 }
 
 func (suite *HttpSuite) TearDownTest() {
+	fmt.Println("TearDownTest - cleaning up tables")
 	testutil.CleanUpTables(*testApp.DB)
 }
 

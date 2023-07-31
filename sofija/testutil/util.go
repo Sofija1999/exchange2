@@ -52,5 +52,5 @@ func MakeRequest(container restful.Container, method string, path string, postDa
 
 // Deletes all records from all tables
 func CleanUpTables(db database.DB) {
-	db.Exec(context.TODO(), "TRUNCATE TABLE egw.user")
+	db.Exec(context.TODO(), "TRUNCATE TABLE egw.user CASCADE")
 }

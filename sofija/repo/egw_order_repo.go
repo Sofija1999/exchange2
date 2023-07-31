@@ -39,8 +39,6 @@ func (repo *EgwOrderRepository) Insert(ctx context.Context, egwOrder *domain.Egw
 		"INSERT INTO egw.order (id, user_id, status, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)",
 		orderID, egwOrder.UserID, egwOrder.Status, egwOrder.CreatedAt, egwOrder.UpdatedAt)
 	if err != nil {
-		fmt.Println("greska u bazi 1")
-		fmt.Println(err)
 		return "", err
 	}
 
