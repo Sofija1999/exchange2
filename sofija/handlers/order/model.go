@@ -32,6 +32,7 @@ func (e *EgwOrderModel) FromDomain(egwOrder *domain.EgwOrder) {
 			ProductID:   item.ProductID,
 			ProductName: item.ProductName,
 			Quantity:    item.Quantity,
+			Price:       item.Price,
 		}
 	}
 }
@@ -47,6 +48,7 @@ func (e *EgwOrderModel) ToDomain() *domain.EgwOrder {
 			ProductID:   item.ProductID,
 			ProductName: item.ProductName,
 			Quantity:    item.Quantity,
+			Price:       item.Price,
 		}
 	}
 
@@ -61,9 +63,10 @@ func (e *EgwOrderModel) ToDomain() *domain.EgwOrder {
 }
 
 type EgwItemOrderModel struct {
-	ProductID   string `json:"product_id"`
-	ProductName string `json:"product_name"`
-	Quantity    int    `json:"quantity"`
+	ProductID   string  `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int     `json:"quantity"`
+	Price       float64 `json:"price"`
 }
 
 func (e *EgwItemOrderModel) FromDomain(item *domain.EgwOrderItem) {
@@ -74,6 +77,7 @@ func (e *EgwItemOrderModel) FromDomain(item *domain.EgwOrderItem) {
 	e.ProductID = item.ProductID
 	e.ProductName = item.ProductName
 	e.Quantity = item.Quantity
+	e.Price = item.Price
 }
 
 func (e *EgwItemOrderModel) ToDomain() *domain.EgwOrderItem {
@@ -85,5 +89,6 @@ func (e *EgwItemOrderModel) ToDomain() *domain.EgwOrderItem {
 		ProductID:   e.ProductID,
 		ProductName: e.ProductName,
 		Quantity:    e.Quantity,
+		Price:       e.Price,
 	}
 }

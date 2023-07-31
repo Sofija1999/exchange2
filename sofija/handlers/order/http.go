@@ -54,6 +54,7 @@ func (e *EgwOrderHttpHandler) InsertOrder(req *restful.Request, resp *restful.Re
 			ProductID:   item.ProductID,
 			ProductName: item.ProductName,
 			Quantity:    item.Quantity,
+			Price:       item.Price,
 		}
 	}
 
@@ -80,6 +81,7 @@ func (e *EgwOrderHttpHandler) InsertOrder(req *restful.Request, resp *restful.Re
 			ProductID:   item.ProductID,
 			ProductName: item.ProductName,
 			Quantity:    item.Quantity,
+			Price:       item.Price,
 		}
 	}
 

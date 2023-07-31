@@ -30,10 +30,6 @@ func NewEgwOrderRepository(db *database.DB) *EgwOrderRepository {
 
 func (repo *EgwOrderRepository) Insert(ctx context.Context, egwOrder *domain.EgwOrder) (string, error) {
 	orderID := uuid.New().String()
-	fmt.Println(egwOrder.UserID)
-	fmt.Println(egwOrder.Status)
-	fmt.Println(egwOrder.CreatedAt)
-	fmt.Println(egwOrder.UpdatedAt)
 
 	_, err := repo.db.Exec(ctx,
 		"INSERT INTO egw.order (id, user_id, status, created_at, updated_at) VALUES ($1, $2, $3, $4, $5)",
@@ -48,8 +44,8 @@ func (repo *EgwOrderRepository) Insert(ctx context.Context, egwOrder *domain.Egw
 		itemID := uuid.New().String()
 
 		_, err := repo.db.Exec(ctx,
-			"INSERT INTO egw.order_item (id, order_id, product_id, product_name, quantity) VALUES ($1, $2, $3, $4, $5)",
-			itemID, orderID, item.ProductID, item.ProductName, item.Quantity)
+			"INSERT INTO egw.order_item (id, order_id, product_id, product_name, quantity, price) VALUES ($1, $2, $3, $4, $5, $6)",
+			itemID, orderID, item.ProductID, item.ProductName, item.Quantity, item.Price)
 		if err != nil {
 			fmt.Println("greska u bazi 2")
 			return "", err
@@ -75,7 +71,7 @@ func (repo *EgwOrderRepository) FindByID(ctx context.Context, id string) (*domai
 
 	// Retrieve order items from the 'egw.order_item' table based on the 'order_id'
 	rows, err := repo.db.Query(ctx,
-		`SELECT product_id, product_name, quantity FROM egw.order_item WHERE order_id = $1`, id)
+		`SELECT product_id, product_name, quantity, price FROM egw.order_item WHERE order_id = $1`, id)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +79,7 @@ func (repo *EgwOrderRepository) FindByID(ctx context.Context, id string) (*domai
 
 	for rows.Next() {
 		var item domain.EgwOrderItem
-		err := rows.Scan(&item.ProductID, &item.ProductName, &item.Quantity)
+		err := rows.Scan(&item.ProductID, &item.ProductName, &item.Quantity, &item.Price)
 		if err != nil {
 			return nil, err
 		}

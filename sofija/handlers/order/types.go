@@ -9,9 +9,10 @@ type InsertRequestData struct {
 }
 
 type InsertOrderItemRequest struct {
-	ProductID   string `json:"product_id"`
-	ProductName string `json:"product_name"`
-	Quantity    int    `json:"quantity"`
+	ProductID   string  `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int     `json:"quantity"`
+	Price       float64 `json:"price"`
 }
 
 type InsertResponseData struct {
@@ -24,9 +25,10 @@ type InsertResponseData struct {
 }
 
 type InsertOrderItemResponse struct {
-	ProductID   string `json:"product_id"`
-	ProductName string `json:"product_name"`
-	Quantity    int    `json:"quantity"`
+	ProductID   string  `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int     `json:"quantity"`
+	Price       float64 `json:"price"`
 }
 
 type UpdateRequestData struct {
