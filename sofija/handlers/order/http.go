@@ -12,6 +12,7 @@ import (
 
 	"github.com/emicklei/go-restful/v3"
 	"github.com/google/uuid"
+	"github.com/jung-kurt/gofpdf"
 )
 
 type EgwOrderHttpHandler struct {
@@ -65,6 +66,12 @@ func (e *EgwOrderHttpHandler) InsertOrder(req *restful.Request, resp *restful.Re
 		return
 	}
 
+	err = generatePDF(egwOrder)
+	if err != nil {
+		resp.WriteError(http.StatusInternalServerError, errors.New("error generating PDF"))
+		return
+	}
+
 	// Send the inserted order back in the response
 	respData := InsertResponseData{
 		ID:        egwOrder.ID,
@@ -95,7 +102,6 @@ func (e *EgwOrderHttpHandler) insertOrder(ctx context.Context, egwOrder *EgwOrde
 	// Insert the order into the database using the order service
 	insertedOrderID, err := e.orderSvc.InsertOrder(ctx, domainOrder)
 	if err != nil {
-		fmt.Println("greskica 3")
 		return err
 	}
 
@@ -103,7 +109,6 @@ func (e *EgwOrderHttpHandler) insertOrder(ctx context.Context, egwOrder *EgwOrde
 	fmt.Println(domainOrder.ID)
 	insertedOrder, err := e.orderSvc.FindByID(ctx, insertedOrderID)
 	if err != nil {
-		fmt.Println("greskica 4")
 		return err
 	}
 
@@ -111,6 +116,66 @@ func (e *EgwOrderHttpHandler) insertOrder(ctx context.Context, egwOrder *EgwOrde
 	egwOrder.FromDomain(insertedOrder)
 
 	return nil
+}
+
+func generatePDF(order *EgwOrderModel) error {
+
+	//create new pdf
+	pdf := gofpdf.New("P", "mm", "A4", "")
+
+	pdf.AddPage()
+
+	//set font Arial, bold, 16mm for header
+	pdf.SetFont("Times", "B", 16)
+
+	// Ispis ID porudžbine i podataka o korisniku
+	pdf.Cell(0, 10, fmt.Sprintf("Order ID: %s", order.ID))
+	pdf.Ln(8)
+	pdf.Cell(0, 10, fmt.Sprintf("User ID: %s", order.UserID))
+	pdf.Ln(8)
+
+	//set font and size for table
+	pdf.SetFont("Times", "", 12)
+
+	//func drawTable for order items
+	drawTable(pdf, order.Items)
+
+	//save pdf
+	fileName := fmt.Sprintf("pdf/order/order_%s.pdf", order.ID)
+	fmt.Println(fileName)
+	err := pdf.OutputFileAndClose(fileName)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("PDF %s je uspesno generisan.\n", fileName)
+	return nil
+}
+
+func drawTable(pdf *gofpdf.Fpdf, items []*EgwItemOrderModel) {
+
+	pdf.SetFillColor(240, 240, 240)
+	pdf.CellFormat(10, 10, "#", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(60, 10, "Product Name", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(30, 10, "Quantity", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(30, 10, "Price", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(40, 10, "Total Price", "1", 0, "C", true, 0, "")
+	pdf.Ln(-1)
+
+	pdf.SetFont("Arial", "", 12)
+
+	for i, item := range items {
+		fmt.Println(item.ProductName)
+		fmt.Println(item.Quantity)
+		fmt.Println(item.Price)
+
+		pdf.CellFormat(10, 10, fmt.Sprintf("%d", i+1), "1", 0, "C", false, 0, "")
+		pdf.CellFormat(60, 10, item.ProductName, "1", 0, "", false, 0, "")
+		pdf.CellFormat(30, 10, fmt.Sprintf("%d", item.Quantity), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(30, 10, fmt.Sprintf("%.2f", item.Price), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(30, 10, fmt.Sprintf("%.2f", float64(item.Quantity)*item.Price), "1", 0, "R", false, 0, "")
+		pdf.Ln(-1)
+	}
 }
 
 func (e *EgwOrderHttpHandler) DeleteOrder(req *restful.Request, resp *restful.Response) {
