@@ -155,11 +155,15 @@ func generatePDF(order *EgwOrderModel) error {
 func drawTable(pdf *gofpdf.Fpdf, items []*EgwItemOrderModel) {
 
 	pdf.SetFillColor(240, 240, 240)
-	pdf.CellFormat(10, 10, "#", "1", 0, "C", true, 0, "")
-	pdf.CellFormat(60, 10, "Product Name", "1", 0, "C", true, 0, "")
-	pdf.CellFormat(30, 10, "Quantity", "1", 0, "C", true, 0, "")
-	pdf.CellFormat(30, 10, "Price", "1", 0, "C", true, 0, "")
-	pdf.CellFormat(40, 10, "Total Price", "1", 0, "C", true, 0, "")
+
+	columnWidths := []float64{10, 50, 20, 25, 35}
+
+	pdf.SetFillColor(240, 240, 240)
+	pdf.CellFormat(columnWidths[0], 10, "#", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(columnWidths[1], 10, "Product Name", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(columnWidths[2], 10, "Quantity", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(columnWidths[3], 10, "Price", "1", 0, "C", true, 0, "")
+	pdf.CellFormat(columnWidths[4], 10, "Total Price", "1", 0, "C", true, 0, "")
 	pdf.Ln(-1)
 
 	pdf.SetFont("Arial", "", 12)
@@ -169,11 +173,11 @@ func drawTable(pdf *gofpdf.Fpdf, items []*EgwItemOrderModel) {
 		fmt.Println(item.Quantity)
 		fmt.Println(item.Price)
 
-		pdf.CellFormat(10, 10, fmt.Sprintf("%d", i+1), "1", 0, "C", false, 0, "")
-		pdf.CellFormat(60, 10, item.ProductName, "1", 0, "", false, 0, "")
-		pdf.CellFormat(30, 10, fmt.Sprintf("%d", item.Quantity), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(30, 10, fmt.Sprintf("%.2f", item.Price), "1", 0, "R", false, 0, "")
-		pdf.CellFormat(30, 10, fmt.Sprintf("%.2f", float64(item.Quantity)*item.Price), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(columnWidths[0], 10, fmt.Sprintf("%d", i+1), "1", 0, "C", false, 0, "")
+		pdf.CellFormat(columnWidths[1], 10, item.ProductName, "1", 0, "", false, 0, "")
+		pdf.CellFormat(columnWidths[2], 10, fmt.Sprintf("%d", item.Quantity), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(columnWidths[3], 10, fmt.Sprintf("%.2f", item.Price), "1", 0, "R", false, 0, "")
+		pdf.CellFormat(columnWidths[4], 10, fmt.Sprintf("%.2f", float64(item.Quantity)*item.Price), "1", 0, "R", false, 0, "")
 		pdf.Ln(-1)
 	}
 }
